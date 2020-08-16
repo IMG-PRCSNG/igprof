@@ -92,8 +92,7 @@ jobs:
       - name: Push other images
         if: "${{ endsWith(github.ref, 'master') }}"
         run: |
-          export REGISTRY=$(echo $REGISTRY | tr '[A-Z]' '[a-z]')
- 
+          export VERSION=latest 
           docker-compose -f docker-compose.yml -f docker/overrides.yml config
           docker-compose -f docker-compose.yml -f docker/overrides.yml build --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f docker-compose.yml -f docker/overrides.yml push

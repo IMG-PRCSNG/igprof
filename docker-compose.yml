@@ -13,8 +13,8 @@ services:
       cache_from:
         - building5/gosu:1.10
         - centos:centos6
-        - ${REGISTRY}/igprof/dev:latest
-        - ${REGISTRY}/igprof/package:latest 
-    image: ${REGISTRY}/igprof/package:${VERSION:-latest}
+        - ${REGISTRY}/dev:latest
+        - ${REGISTRY}/package:latest 
+    image: ${REGISTRY}/package:${VERSION:-latest}
     
 version: '3.5'

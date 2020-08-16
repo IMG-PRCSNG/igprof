@@ -6,7 +6,7 @@ services:
     stdin_open: true
     build:
       target: dev
-    image: ${REGISTRY}/igprof/dev:${VERSION:-latest}
+    image: ${REGISTRY}/dev:${VERSION:-latest}
     volumes:
       - ./docker/entrypoint.sh:/entrypoint.sh
       - ./:/igprof
