@@ -1,0 +1,6 @@
+.git
+*~
+.*~
+docker/Dockerfile
+docker/overrides.yml
+docker-compose.yml
