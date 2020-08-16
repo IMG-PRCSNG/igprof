@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+  igprof:
+    working_dir: /igprof
+    command: ["/bin/bash", "-c", "bash build.sh && exec /bin/bash"]
+    stdin_open: true
+    build:
+      target: dev
+    image: ${REGISTRY}/igprof/dev:${VERSION:-latest}
+    volumes:
+      - ./docker/entrypoint.sh:/entrypoint.sh
+      - ./:/igprof
