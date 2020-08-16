@@ -42,6 +42,16 @@ jobs:
  
           docker-compose config
           docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1
+      - name: Run simple test
+        run: |
+          docker-compose run \
+            --rm \
+            -w /tmp \
+            -v `pwd`/docker/vvvi-build-and-copy.cc:/tmp/vvvi-build-and-copy.cc \
+            igprof \
+            /bin/bash -c "g++ -o vvvi-build-and-copy vvvi-build-and-copy.cc -ldl -lpthread && \
+               igprof -mp -z -o ig-vvvi-build-and-copy.gz ./vvvi-build-and-copy || true && \
+               igprof-analyse -d -v -g -r MEM_TOTAL ig-vvvi-build-and-copy.gz"
           
   push:
     needs: build
