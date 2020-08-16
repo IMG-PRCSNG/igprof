@@ -1,0 +1,15 @@
+services:
+  igprof:
+    tty: true
+    environment:
+    - LOCAL_USER_ID=${LOCAL_USER_ID:-1000}
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: package
+      args:
+        - LIBATOMIC_VERSION=7.2alpha4
+        - LIBUNWIND_VERSION=1.1
+    image: ${REGISTRY}/igprof/package:${VERSION:-latest}
+    
+version: '3.5'
