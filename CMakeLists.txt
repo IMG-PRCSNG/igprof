@@ -1,6 +1,9 @@
 PROJECT(IGPROF C CXX)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 FIND_PACKAGE(Threads)
+
+# Provides unwind target
+include(cmake/dependencies.cmake)
 
 #Find PCRE library
 IF(PCRE_INCLUDE_DIR AND PCRE_LIBRARIES)
@@ -88,8 +91,6 @@ IF(UNIX)
 ENDIF()
 
 IF(${CMAKE_SYSTEM_PROCESSOR} MATCHES 64 OR ${CMAKE_SYSTEM_PROCESSOR} MATCHES arm)
-  FIND_PATH(UNWIND_INCLUDE_DIR libunwind.h)
-  FIND_LIBRARY(UNWIND_LIBRARY NAMES unwind)
 ENDIF()
 
 # Build web page
@@ -110,10 +111,10 @@ ENDIF()
 
 # Build targets.
 IF(PCRE_FOUND)
-  INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${UNWIND_INCLUDE_DIR}
+  INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}
                       ${PCRE_INCLUDE_DIR})
 ELSE()
-  INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${UNWIND_INCLUDE_DIR})
+  INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} )
 ENDIF()
 IF(PAPI_FOUND)
   # Treat the directory containing papi.h as a system include directory in
@@ -141,7 +142,12 @@ ADD_LIBRARY(igprof SHARED
             src/trace-throw.cc)
 #SET_TARGET_PROPERTIES(igprof PROPERTIES LINK_FLAGS -Wl,-z,nodefs)
 
-TARGET_LINK_LIBRARIES(igprof ${UNWIND_LIBRARY} ${IGPROF_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+target_include_directories(igprof PUBLIC unwind)
+TARGET_LINK_LIBRARIES(igprof
+       unwind
+       ${IGPROF_LIBS}
+       ${CMAKE_THREAD_LIBS_INIT})
+
 ADD_EXECUTABLE(igprof-analyse src/analyse.cc)
 IF(PCRE_FOUND)
   TARGET_LINK_LIBRARIES(igprof-analyse ${CMAKE_DL_LIBS} ${PCRE_LIBRARIES})
